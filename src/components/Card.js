@@ -1,23 +1,3 @@
-// import React from 'react';
-// import { useNavigate } from 'react-router-dom';
-
-// function Card({ topic }) {
-//   const navigate = useNavigate();
-
-//   const navigateToDetail = () => {
-//     navigate(`/details/${topic}`);
-//   };
-
-//   return (
-//     <div className="p-4 bg-white shadow-lg rounded-lg cursor-pointer" onClick={navigateToDetail}>
-//       <h2 className="text-xl font-bold mb-4">{topic}</h2>
-//     </div>
-//   );
-// }
-
-// export default Card;
-
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
