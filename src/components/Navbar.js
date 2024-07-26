@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaStar } from 'react-icons/fa'; // Import a star icon for a more modern look
+import { FaStar } from 'react-icons/fa'; 
 
 function Navbar() {
   const [quote, setQuote] = useState('');
