@@ -1,4 +1,3 @@
-// src/components/CardDetail.js
 import React, { useState, useEffect } from 'react';
 import AddQuestionModal from './AddQuestionModal';
 import { useParams } from 'react-router-dom';
@@ -17,21 +16,36 @@ function CardDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState('');
   const [questions, setQuestions] = useState({ easy: [], medium: [], hard: [] });
+  const [editIndex, setEditIndex] = useState(null); // To store the index of the question being edited
+  const [editMode, setEditMode] = useState(false); // To toggle between add and edit mode
 
   useEffect(() => {
     const loadedQuestions = getQuestionsFromLocalStorage(topic);
     setQuestions(loadedQuestions);
   }, [topic]);
 
-  const openModal = (level) => {
+  const openModal = (level, index = null) => {
     setSelectedLevel(level);
+    setEditIndex(index);
+    setEditMode(index !== null); // Edit mode if index is not null
     setIsModalOpen(true);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditIndex(null);
+    setEditMode(false);
+  };
 
-  const handleAddQuestion = (level, question) => {
-    const updatedQuestions = { ...questions, [level]: [...questions[level], question] };
+  const handleAddOrUpdateQuestion = (level, question) => {
+    const updatedQuestions = { ...questions };
+    if (editMode && editIndex !== null) {
+      // Update existing question
+      updatedQuestions[level][editIndex] = question;
+    } else {
+      // Add new question
+      updatedQuestions[level] = [...updatedQuestions[level], question];
+    }
     setQuestions(updatedQuestions);
     saveQuestionsToLocalStorage(topic, updatedQuestions);
   };
@@ -60,6 +74,12 @@ function CardDetail() {
                     <div>
                       <a href={q.link} className="text-blue-500 ml-2" target="_blank" rel="noopener noreferrer">🔗</a>
                       <button 
+                        onClick={() => openModal(level, index)} 
+                        className="text-blue-500 ml-2"
+                      >
+                        ✏️
+                      </button>
+                      <button 
                         onClick={() => handleDeleteQuestion(level, index)} 
                         className="text-red-500 ml-2"
                       >
@@ -86,7 +106,16 @@ function CardDetail() {
           </div>
         ))}
       </div>
-      {isModalOpen && <AddQuestionModal closeModal={closeModal} level={selectedLevel} onAddQuestion={handleAddQuestion} />}
+      {isModalOpen && (
+        <AddQuestionModal
+          closeModal={closeModal}
+          level={selectedLevel}
+          onAddQuestion={handleAddOrUpdateQuestion}
+          editMode={editMode}
+          editIndex={editIndex}
+          initialQuestion={editMode && editIndex !== null ? questions[selectedLevel][editIndex] : null}
+        />
+      )}
     </div>
   );
 }
