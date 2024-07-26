@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaStar } from 'react-icons/fa'; // Import a star icon for a more modern look
 
 function Navbar() {
   const [quote, setQuote] = useState('');
-  const navigate = useNavigate(); // Add this line
+  const navigate = useNavigate();
 
   const quotes = [
     "Life is what happens when you're busy making other plans.",
@@ -31,6 +32,10 @@ function Navbar() {
     "Dream it, code it, achieve it."
   ];
 
+  useEffect(() => {
+    displayQuote(); // Set a random quote when the component mounts
+  }, []);
+
   const displayQuote = () => {
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     setQuote(randomQuote);
@@ -41,16 +46,22 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between items-center p-4 bg-gray-800 text-white font-bold">
+    <nav className="bg-gray-900 text-white p-4 flex flex-col md:flex-row justify-between items-center">
       <div 
-        className="text-xl cursor-pointer" 
+        className="text-2xl font-extrabold cursor-pointer hover:text-gray-400 transition-colors"
         onClick={handleHomeClick}
       >
         Custom-DS Space
       </div>
-      <div className="text-center">{quote}</div>
-      <button onClick={displayQuote} className="bg-blue-500 px-4 py-2 rounded">
-        Quotes
+      <div className="text-center mt-2 md:mt-0 md:text-lg flex-1">
+        {quote}
+      </div>
+      <button 
+        onClick={displayQuote} 
+        className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition-colors"
+      >
+        <FaStar className="inline-block mr-2 animate-bounce" />
+        Get Quote
       </button>
     </nav>
   );
